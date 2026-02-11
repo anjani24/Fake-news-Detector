@@ -1,2 +1,3 @@
 # fakenews
-Fake news detector ai project , logistic regression , random forest,svm
+Fake news detector 
+logistic regression , random forest,svm
