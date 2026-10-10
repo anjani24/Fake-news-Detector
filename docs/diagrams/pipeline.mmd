@@ -1,0 +1,21 @@
+flowchart TD
+    A[WELFake news dataset] --> B[Inspect and clean data]
+    B --> C[News text]
+    C --> D1[Stemming]
+    C --> D2[POS-aware lemmatization]
+    D1 --> E1[TF-IDF features]
+    D2 --> E2[TF-IDF features]
+    E1 --> F1[Logistic Regression]
+    E1 --> F2[Support Vector Classifier]
+    E1 --> F3[Random Forest]
+    E2 --> G1[Logistic Regression]
+    E2 --> G2[Support Vector Classifier]
+    E2 --> G3[Random Forest]
+    F1 --> H[Evaluation]
+    F2 --> H
+    F3 --> H
+    G1 --> H
+    G2 --> H
+    G3 --> H
+    H --> I[Accuracy, precision, recall, F1]
+    H --> J[Confusion matrices and ROC/AUC]

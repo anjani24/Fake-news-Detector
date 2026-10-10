@@ -1,220 +1,198 @@
-# 🔍 Fake News Detector
+# Fake News Detector
 
-A machine learning-based system that identifies fake news articles with high accuracy using advanced NLP techniques and multiple classification algorithms.
+<p align="center">
+  <strong>Machine learning for NLP-based fake news classification.</strong>
+  <br />
+  A comparative notebook project exploring how text normalization, TF-IDF features, and classical classifiers can be used to classify news articles as real or fake.
+</p>
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Motivation](#motivation)
-- [Technical Approach](#technical-approach)
-- [Models & Performance](#models--performance)
-- [Project Structure](#project-structure)
-- [Key Features](#key-features)
-- [What I Learned](#what-i-learned)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/NLP-TF--IDF-0F766E" alt="NLP" />
+  <img src="https://img.shields.io/badge/scikit--learn-modeling-F7931E?logo=scikitlearn&logoColor=white" alt="scikit-learn" />
+  <img src="https://img.shields.io/badge/Notebook-Jupyter-F37626?logo=jupyter&logoColor=white" alt="Jupyter" />
+</p>
 
 ---
 
 ## Overview
 
-This project tackles one of today's most pressing challenges: **identifying misinformation in news content**. The system analyzes news article titles and classifies them as either genuine or fake using a combination of Natural Language Processing (NLP) and machine learning.
+Fake News Detector is a natural-language-processing and machine-learning project that studies whether the text of a news article can be classified as **real** or **fake**. The main experiment uses the WELFake dataset and compares multiple feature-preprocessing and classifier combinations.
 
-The model achieves high accuracy by combining:
-- **Text preprocessing** with both stemming and lemmatization techniques
-- **Feature extraction** using TF-IDF vectorization
-- **Ensemble learning** with multiple classifier algorithms
-- **Rigorous evaluation** with comprehensive metrics
+The notebook explores the full workflow: data inspection, text cleaning, linguistic normalization, TF-IDF feature extraction, supervised model training, and classification evaluation.
 
----
+> **Important:** This is a text-classification experiment, not a fact-checking authority. Predictions reflect patterns learned from a dataset and may be wrong, biased, or outdated. Verify important claims with reliable sources.
 
-## Motivation
+## ML pipeline
 
-In an age of information overload, the ability to distinguish authentic journalism from misleading content is crucial. This project demonstrates how machine learning can serve as a practical tool to:
-- Automate fact-checking at scale
-- Combat misinformation spread on social media
-- Assist journalists and content moderators
-- Support media literacy efforts
-
----
-
-## Technical Approach
-
-### 1. **Data Processing & Exploration**
-- **Dataset**: WELFake Dataset containing real and fake news articles
-- **Size**: Balanced dataset with clear label distribution
-- **Preprocessing Steps**:
-  - Handled missing values
-  - Text normalization and cleaning
-  - Removal of special characters and numbers
-
-### 2. **Text Preprocessing Pipeline**
-
-I implemented **two parallel preprocessing strategies** to capture different aspects of language:
-
-#### **Lemmatization Path**
-- Converts words to their dictionary form (base meaning)
-- Example: "running" → "run"
-- Preserves semantic meaning better
-- Uses POS (Part-of-Speech) tagging for context-aware conversion
-
-#### **Stemming Path**
-- Reduces words to their root form using Porter Stemmer
-- Example: "running" → "run"
-- Faster but less accurate semantically
-- Useful for capturing word variations
-
-### 3. **Feature Engineering**
-- **TF-IDF Vectorization**: Converts text into numerical features
-  - Term Frequency: Measures word frequency in a document
-  - Inverse Document Frequency: Weights down common words across all documents
-  - Result: High-dimensional feature vectors capturing word importance
-
-### 4. **Data Split**
-- 80% training data | 20% testing data
-- Stratified split to maintain class distribution
-- Fixed random seed for reproducibility
-
----
-
-## Models & Performance
-
-I trained and compared **three different machine learning algorithms**, each with two feature sets (stemmed and lemmatized):
-
-### **1. Logistic Regression**
-- Fast linear classifier
-- Great baseline model
-- Provides probability estimates
-- **Use Case**: When speed and interpretability matter
-
-### **2. Support Vector Classifier (SVM)**
-- Powerful non-linear classifier
-- Finds optimal decision boundary
-- Good generalization
-- **Use Case**: When maximum separation is needed
-
-### **3. Random Forest Classifier**
-- Ensemble method combining multiple decision trees
-- Handles non-linear relationships well
-- Provides feature importance insights
-- **Use Case**: When capturing complex patterns is important
-
-### **Evaluation Metrics**
-For each model, I calculated:
-- **Accuracy**: Overall correctness
-- **Precision**: False positives (wrongly labeling real news as fake)
-- **Recall**: False negatives (wrongly labeling fake as real)
-- **F1-Score**: Balanced metric combining precision & recall
-- **Confusion Matrix**: Visual breakdown of predictions
-- **ROC Curve & AUC**: Classification threshold analysis
-
----
-
-## Project Structure
-
+```mermaid
+flowchart TD
+    A[WELFake news dataset] --> B[Inspect and clean data]
+    B --> C[News text]
+    C --> D1[Stemming]
+    C --> D2[POS-aware lemmatization]
+    D1 --> E1[TF-IDF features]
+    D2 --> E2[TF-IDF features]
+    E1 --> F1[Logistic Regression]
+    E1 --> F2[Support Vector Classifier]
+    E1 --> F3[Random Forest]
+    E2 --> G1[Logistic Regression]
+    E2 --> G2[Support Vector Classifier]
+    E2 --> G3[Random Forest]
+    F1 --> H[Evaluation]
+    F2 --> H
+    F3 --> H
+    G1 --> H
+    G2 --> H
+    G3 --> H
+    H --> I[Accuracy, precision, recall, F1]
+    H --> J[Confusion matrices and ROC/AUC]
 ```
+
+[Editable Mermaid pipeline](docs/diagrams/pipeline.mmd)
+
+## Methodology
+
+### 1. Dataset and preprocessing
+
+The notebook uses the **WELFake Dataset**. It inspects the data, handles missing values, and cleans article text by normalizing content and removing unwanted characters. The data is split into training and test sets using an 80/20 split with stratification to preserve the label distribution.
+
+Check the original dataset source for download details and licensing before redistributing it.
+
+### 2. Stemming vs. lemmatization
+
+The project evaluates two text-normalization approaches:
+
+- **Stemming:** uses the Porter Stemmer to reduce words to stems.
+- **Lemmatization:** uses WordNet lemmatization with part-of-speech information to reduce words to dictionary forms.
+
+These alternatives are compared to study how text normalization changes the representation passed to a classifier.
+
+### 3. TF-IDF feature extraction
+
+TF-IDF (Term Frequency–Inverse Document Frequency) converts article text into sparse numerical features. It weights terms based on their usefulness within a document relative to the wider corpus.
+
+### 4. Classifiers
+
+The notebook compares three supervised learning algorithms with both feature-processing strategies:
+
+| Model | Role in the experiment |
+| --- | --- |
+| Logistic Regression | Linear classification baseline |
+| Support Vector Classifier (SVC) | Margin-based classification |
+| Random Forest | Ensemble of decision trees |
+
+This creates six model/preprocessing combinations for comparison, assuming each combination was run successfully in the notebook.
+
+## Evaluation
+
+The notebook imports and uses classification evaluation metrics, including:
+
+- **Accuracy:** fraction of examples classified correctly.
+- **Precision:** among examples predicted as fake, the share that are actually labeled fake.
+- **Recall:** among examples labeled fake, the share identified by the model.
+- **F1-score:** harmonic mean of precision and recall.
+- **Confusion matrix:** shows false positives and false negatives.
+- **ROC curve and AUC:** evaluates discrimination across classification thresholds where supported by the model output.
+
+No headline score is claimed here because the exact final metric values were not verified from the notebook outputs. Add metrics from the latest completed test-set evaluation rather than estimating or inventing them.
+
+## Repository contents
+
+```text
 Fake-news-Detector/
-├── Fake news detector.ipynb          # Main notebook with full analysis
-├── README.md                          # This file
-├── lr_stem_model.joblib              # Logistic Regression (stemmed features)
-├── lr_lem_model (1).joblib           # Logistic Regression (lemmatized features)
-├── svm_stem_model.joblib             # SVM Classifier (stemmed features)
-├── svm_lem_model.joblib              # SVM Classifier (lemmatized features)
-├── vectorizer_lem (1).joblib         # TF-IDF Vectorizer (lemmatized)
-└── fakenewsai/                       # Project directory
+├── Fake news detector.ipynb       # EDA, preprocessing, model comparison and evaluation
+├── README.md
+├── lr_stem_model.joblib            # Saved Logistic Regression model (stemming)
+├── lr_lem_model (1).joblib         # Saved Logistic Regression model (lemmatization)
+├── svm_stem_model.joblib           # Saved SVC model (stemming)
+├── svm_lem_model.joblib            # Saved SVC model (lemmatization)
+├── vectorizer_lem (1).joblib       # Saved lemmatization TF-IDF vectorizer
+└── fakenewsai                      # Existing project artifact
 ```
 
----
+The existing files use slightly inconsistent names. A model and vectorizer must come from the same preprocessing pipeline; a vectorizer fitted on lemmatized text should not be assumed compatible with a model trained on stemmed text.
 
-## Key Features
-
-### **Dual Text Processing**
-Two preprocessing approaches trained in parallel for comparison and ensemble potential
-
-### **Comprehensive Analysis**
-- Word frequency analysis with visualizations
-- Word clouds for quick pattern recognition
-- Detailed confusion matrices
-- ROC curves for threshold optimization
-
-### **Multiple Models**
-Built 6 trained models (3 algorithms × 2 preprocessing methods) for flexibility
-
-### **Detailed Evaluation**
-Rigorous metrics beyond simple accuracy to understand model behavior
-
-### **Pre-trained Models**
-All models saved as .joblib files for easy reuse without retraining
-
----
-
-## What I Learned
-
-### Technical Skills Developed:
-1. **NLP Pipeline Design**
-   - Difference between stemming vs. lemmatization
-   - When to use each approach
-   - POS tagging for smarter text processing
-
-2. **Machine Learning Best Practices**
-   - Importance of train-test splitting and stratification
-   - Feature engineering impact on model performance
-   - Comparing multiple algorithms systematically
-   - Understanding precision-recall tradeoffs
-
-3. **Data Science Workflow**
-   - From raw data to production-ready models
-   - Proper evaluation methodology
-   - Reproducibility through fixed random seeds
-
-4. **Real-world Problem Solving**
-   - Handling imbalanced or messy data
-   - Trade-offs between accuracy and interpretability
-   - Practical applications of ML in content moderation
-
-### Key Insights:
-- **Lemmatization often outperforms stemming** for semantic understanding
-- **Different models excel in different scenarios** - no one-size-fits-all solution
-- **Visualization is crucial** for understanding model behavior
-- **Ensemble methods like Random Forest** capture complex patterns better than linear models
-
----
-
-## Installation & Usage
+## Getting started
 
 ### Requirements
+
+- Python
+- Jupyter Notebook or JupyterLab
+- NumPy, pandas, scikit-learn, NLTK, Matplotlib, Seaborn, WordCloud
+- `scikit-learn-intelex` is used as an optional scikit-learn acceleration package in the notebook
+
+Create an environment and install the main dependencies:
+
 ```bash
-pip install numpy pandas scikit-learn nltk matplotlib seaborn wordcloud autocorrect
+python -m venv .venv
+source .venv/bin/activate   # macOS/Linux
+# .venv\Scripts\activate    # Windows
+
+python -m pip install --upgrade pip
+python -m pip install numpy pandas scikit-learn nltk matplotlib seaborn wordcloud scikit-learn-intelex jupyter
 ```
 
-### Running the Notebook
+### Run the notebook
+
 ```bash
+git clone https://github.com/anjani24/Fake-news-Detector.git
+cd Fake-news-Detector
 jupyter notebook "Fake news detector.ipynb"
 ```
 
-### Using Pre-trained Models
+The notebook was originally run in a Kaggle environment where the dataset was available under `/kaggle/input/`. For local use, download the WELFake CSV from its original source and update the notebook's data path accordingly.
+
+NLTK may require downloadable resources for tokenization, POS tagging, stopwords, and WordNet lemmatization. Follow the notebook's errors/prompts if any resources are missing.
+
+## Loading a saved model
+
+Saved `.joblib` artifacts are present. For inference, the vectorizer must match the preprocessing and model used during training.
+
 ```python
 import joblib
 
-# Load model
-model = joblib.load('lr_stem_model.joblib')
+model = joblib.load("lr_stem_model.joblib")
 
-# Load vectorizer
-vectorizer = joblib.load('vectorizer_lem (1).joblib')
+# Load a vectorizer trained for the SAME stemming pipeline.
+# Replace this path with the matching stemmed vectorizer artifact
+# once it is available in the repository.
+vectorizer = joblib.load("path/to/matching_stem_vectorizer.joblib")
 
-# Make predictions
-text_features = vectorizer.transform(['your news text here'])
-prediction = model.predict(text_features)
+articles = ["A sample news headline to classify."]
+features = vectorizer.transform(articles)
+predictions = model.predict(features)
+
+print(predictions)
 ```
 
+The listed artifacts include a lemmatized vectorizer but no clearly named stemmed vectorizer. Do not pair artifacts from different pipelines without confirming their training configuration.
+
+Only load trusted `.joblib` files. Pickle-based formats can execute code when loading untrusted or tampered artifacts.
+
+## Interpretation and limitations
+
+- A model learns associations in the training dataset; it does not independently verify facts or sources.
+- Dataset artifacts and writing styles can create shortcuts that do not generalize to new events or publishers.
+- Text-only input omits source reputation, external evidence, publication context and subsequent corrections.
+- Performance should be checked on a properly held-out set and, ideally, on newer or externally sourced examples.
+- Precision and recall matter differently depending on the cost of falsely flagging genuine reporting versus missing misinformation.
+- Model/vectorizer compatibility and preprocessing consistency are required for valid inference.
+
+## Future improvements
+
+- [ ] Export a complete, versioned inference pipeline (preprocessor + vectorizer + classifier).
+- [ ] Add a reusable prediction script with input validation.
+- [ ] Record test-set metrics for all model/preprocessing combinations.
+- [ ] Add cross-validation and error analysis on misclassified examples.
+- [ ] Evaluate on newer data to test temporal generalization.
+- [ ] Add a reproducible dependency file and automated notebook/build checks.
+- [ ] Explore source-aware or evidence-retrieval features without treating model predictions as ground truth.
+
+## Tech stack
+
+Python · pandas · NumPy · NLTK · scikit-learn · TF-IDF · Logistic Regression · SVC · Random Forest · Matplotlib · Seaborn · WordCloud · Jupyter Notebook
+
 ---
 
-## Future Enhancements
-
-- Deploy as a web API for real-time classification
-- Create a browser extension for on-the-fly fact-checking
-- Implement transfer learning with pre-trained language models (BERT, RoBERTa)
-- Add more sophisticated features (source credibility, temporal patterns)
-- Extend to multi-language support
-- Incorporate fact-checking with external databases
-
----
-
-**Built with Python, scikit-learn, and NLTK** | *Machine Learning for Misinformation Detection*
+If you use this project, cite the WELFake dataset at its original source and report the exact experimental setup alongside any performance numbers.
